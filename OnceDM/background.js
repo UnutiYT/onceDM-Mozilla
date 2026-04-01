@@ -166,8 +166,7 @@
   }
 
   browser.runtime.onInstalled.addListener(() => {});
-
-  // C'est ici que la magie de Firefox opère : on retourne les promesses !
+  
   browser.runtime.onMessage.addListener((message, _sender) => {
     if (message.action === "OPEN_DESKTOP_VIEW") {
       return browser.tabs.query({ active: true, currentWindow: true })
