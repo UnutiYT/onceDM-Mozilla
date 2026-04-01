@@ -1,6 +1,6 @@
 # OnceDM Features
 
-OnceDM is a Chrome extension for saving disappearing Instagram DM media sent with the view-once flow, with no trial, no premium gate, and no account or license check.
+OnceDM is a Firefox extension for saving disappearing Instagram DM media sent with the view-once flow, with no trial, no premium gate, and no account or license check.
 
 ## Core functionality
 
