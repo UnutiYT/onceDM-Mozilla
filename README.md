@@ -27,7 +27,7 @@ Save Instagram DM view-once media. Preview, download, or export everything as ZI
 
 ## Install locally
 
-1. Download the file zip from here: `https://github.com/UnutiYT/onceDM-Mozilla`
+1. Download the file zip from here: `https://github.com/UnutiYT/onceDM-Mozilla/releases/tag/onceDM`
 2. Unpack the file zip
 1. Open `about:debugging`
 2. Click `This Firefox`
