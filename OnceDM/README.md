@@ -1,6 +1,6 @@
 # OnceDM
 
-OnceDM is a simple Chrome extension that helps you save Instagram DM view-once media.
+OnceDM is a simple Firefox extension that helps you save Instagram DM view-once media.
 
 ## GitHub description
 
@@ -19,19 +19,19 @@ Save Instagram DM view-once media. Preview, download, or export everything as ZI
 ## How to use
 
 1. Open an Instagram DM chat.
-2. Click the OnceDM icon in Chrome, or click the floating icon inside Instagram.
+2. Click the OnceDM icon in Firefox, or click the floating icon inside Instagram.
 3. Wait for the media to appear.
 4. Preview, download, or export the files.
 
 ## Install locally
 
-1. Open `chrome://extensions`
-2. Turn on `Developer mode`
-3. Click `Load unpacked`
-4. Select this folder
+1. Open `about:debugging`
+2. Click `This Firefox`
+3. Click `Load Temporary Add-on…`
+4. Select `manifest.json` in the downladed file
 
 ## Notes
 
 - Works on Instagram DM pages
 - Focused on disappearing or view-once media
-- Built as a Chrome extension
+- Built as a Firefox extension
