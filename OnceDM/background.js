@@ -155,7 +155,7 @@
     const objectUrl = URL.createObjectURL(blob);
 
     try {
-      await chrome.downloads.download({
+      await browser.downloads.download({
         url: objectUrl,
         filename: `OnceDM_${Date.now()}.zip`,
         saveAs: true,
@@ -165,39 +165,35 @@
     }
   }
 
-  chrome.runtime.onInstalled.addListener(() => {});
+  browser.runtime.onInstalled.addListener(() => {});
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  // C'est ici que la magie de Firefox opère : on retourne les promesses !
+  browser.runtime.onMessage.addListener((message, _sender) => {
     if (message.action === "OPEN_DESKTOP_VIEW") {
-      chrome.tabs.query({ active: true, currentWindow: true })
+      return browser.tabs.query({ active: true, currentWindow: true })
         .then(([tab]) => {
           const sourceTabId = tab?.id;
-          const url = chrome.runtime.getURL(`popup.html?desktop=1${sourceTabId ? `&tabId=${sourceTabId}` : ""}`);
-          return chrome.tabs.create({ url });
+          const url = browser.runtime.getURL(`popup.html?desktop=1${sourceTabId ? `&tabId=${sourceTabId}` : ""}`);
+          return browser.tabs.create({ url });
         })
-        .then(() => sendResponse({ success: true }))
-        .catch((error) => sendResponse({ success: false, error: error.message }));
-      return true;
+        .then(() => ({ success: true }))
+        .catch((error) => ({ success: false, error: error.message }));
     }
 
     if (message.action === "DOWNLOAD_ZIP") {
-      createZipFromFiles(message.files)
-        .then(() => sendResponse({ success: true }))
-        .catch((error) => sendResponse({ success: false, error: error.message }));
-      return true;
+      return createZipFromFiles(message.files)
+        .then(() => ({ success: true }))
+        .catch((error) => ({ success: false, error: error.message }));
     }
 
     if (message.action === "DOWNLOAD_SINGLE") {
-      chrome.downloads.download({
+      return browser.downloads.download({
         url: message.url,
         filename: sanitizeFilename(message.filename),
         saveAs: false,
       })
-        .then((downloadId) => sendResponse({ success: true, id: downloadId }))
-        .catch((error) => sendResponse({ success: false, error: error.message }));
-      return true;
+        .then((downloadId) => ({ success: true, id: downloadId }))
+        .catch((error) => ({ success: false, error: error.message }));
     }
-
-    return false;
   });
 })();
