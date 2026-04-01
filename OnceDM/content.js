@@ -25,12 +25,12 @@
     const badge = document.createElement("div");
     const icon = document.createElement("img");
     badge.id = BADGE_ID;
-    icon.src = chrome.runtime.getURL("icon.png");
+    icon.src = browser.runtime.getURL("icon.png");
     icon.alt = "OnceDM";
     badge.appendChild(icon);
     badge.title = "Open OnceDM desktop view";
     badge.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ action: "OPEN_DESKTOP_VIEW" });
+      browser.runtime.sendMessage({ action: "OPEN_DESKTOP_VIEW" });
     });
     document.body.appendChild(badge);
   }
@@ -40,7 +40,7 @@
     #${BADGE_ID} {
       position: fixed;
       left: 18px;
-      bottom: 18px;
+      bottom: 70px; /* Remonté pour Firefox Android / Instagram Mobile */
       transform: none;
       width: 44px;
       height: 44px;
