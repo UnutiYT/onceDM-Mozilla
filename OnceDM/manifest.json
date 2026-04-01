@@ -1,9 +1,14 @@
 {
-  "update_url": "https://clients2.google.com/service/update2/crx",
   "manifest_version": 3,
   "name": "OnceDM: Save Instagram DMs & View Once",
   "version": "1.1.0",
   "description": "Save disappearing photos, videos, and view-once messages from Instagram DMs with unlimited downloads and ZIP export.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "oncedmmozilla@unuti.fr",
+      "strict_min_version": "109.0"
+    }
+  },
   "permissions": [
     "scripting",
     "activeTab",
@@ -18,7 +23,9 @@
     "https://*.cdninstagram.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": [
+      "background.js"
+    ]
   },
   "content_scripts": [
     {
