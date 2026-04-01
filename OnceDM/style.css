@@ -40,8 +40,10 @@ body.light {
 }
 
 body {
-  width: 420px;
-  min-height: 580px;
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  margin: 0 auto;
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-main);
   background:
@@ -55,7 +57,7 @@ body {
 
 body.desktop {
   width: 100%;
-  min-width: 0;
+  max-width: none;
   min-height: 100vh;
 }
 
@@ -603,5 +605,34 @@ body.light #toast {
 
   50% {
     transform: scale(1.08);
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    padding: 14px 14px 10px;
+  }
+
+  .container {
+    padding: 14px;
+  }
+
+  .hero-card {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .hero-card h1 {
+    font-size: 21px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); 
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 36px;
+    height: 36px;
   }
 }
