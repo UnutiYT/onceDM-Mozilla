@@ -151,8 +151,8 @@
   async function scanActiveTab() {
     try {
       const tab = sourceTabId
-        ? await chrome.tabs.get(sourceTabId).catch(() => null)
-        : (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+        ? await browser.tabs.get(sourceTabId).catch(() => null)
+        : (await browser.tabs.query({ active: true, currentWindow: true }))[0];
 
       if (!tab?.id) {
         return;
@@ -170,7 +170,7 @@
 
       setStatus("scanning", "Scanning active");
 
-      const [{ result: pageHtml }] = await chrome.scripting.executeScript({
+      const [{ result: pageHtml }] = await browser.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => document.documentElement.outerHTML,
       });
@@ -181,8 +181,6 @@
         .map(normalizeText)
         .join("\n");
 
-      // Keep the original narrow matcher so OnceDM only surfaces
-      // the ephemeral "view once" media flow the first app detected.
       const mediaRegex = /https:\/\/video[^",\s]+/g;
       const existingUrls = new Set(Array.from(mediaMap.values()).map((item) => item.url));
 
@@ -221,18 +219,19 @@
   }
 
   async function downloadSingle(url, filename) {
-    chrome.runtime.sendMessage(
-      { action: "DOWNLOAD_SINGLE", url, filename },
-      (response) => {
-        if (chrome.runtime.lastError || !response?.success) {
-          showToast("Download failed", "error");
-          return;
-        }
-
-        const shortName = filename.length > 25 ? `${filename.slice(0, 25)}...` : filename;
-        showToast(`Downloading ${shortName}`);
+    try {
+      const response = await browser.runtime.sendMessage({ action: "DOWNLOAD_SINGLE", url, filename });
+      
+      if (!response?.success) {
+        showToast("Download failed", "error");
+        return;
       }
-    );
+
+      const shortName = filename.length > 25 ? `${filename.slice(0, 25)}...` : filename;
+      showToast(`Downloading ${shortName}`);
+    } catch (error) {
+      showToast("Download failed", "error");
+    }
   }
 
   function openOverlay(card) {
@@ -305,7 +304,7 @@
       }
 
       if (event.target.closest(refreshButtons.join(",")) && activeTabId) {
-        chrome.tabs.reload(activeTabId);
+        browser.tabs.reload(activeTabId);
       }
     });
 
@@ -314,7 +313,7 @@
       localStorage.theme = document.body.classList.contains("light") ? "light" : "dark";
     };
 
-    $("#zip-btn").onclick = () => {
+    $("#zip-btn").onclick = async () => {
       if (!mediaMap.size) {
         showToast("No media to zip", "error");
         return;
@@ -322,14 +321,17 @@
 
       const files = Array.from(mediaMap.entries()).map(([filename, { url }]) => ({ filename, url }));
       showToast("Preparing ZIP in background...");
-      chrome.runtime.sendMessage({ action: "DOWNLOAD_ZIP", files }, (response) => {
-        if (chrome.runtime.lastError || !response?.success) {
+      
+      try {
+        const response = await browser.runtime.sendMessage({ action: "DOWNLOAD_ZIP", files });
+        if (!response?.success) {
           showToast("ZIP download failed", "error");
           return;
         }
-
         showToast("ZIP download started");
-      });
+      } catch (error) {
+        showToast("ZIP download failed", "error");
+      }
     };
   }
 
